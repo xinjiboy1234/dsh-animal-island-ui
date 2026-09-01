@@ -1,0 +1,13 @@
+# dsh-animal-island-ui bundle patch: inserts its plugin row into the web
+# profile roster. The single row mounts BOTH halves: the server half
+# (lib/index.js, a minimal Cordis plugin) and the browser half (lib/client.js,
+# served from this package's ./client export) that applies the Animal Crossing
+# theme-token override layer and skins the page.
+#
+# Install into a profile with:
+#   dsh plugin --profile web add <path-to-this-package>
+# then enable the row (set disabled: false / remove the row) in the profile's
+# cordis.patch.yml.
+- insert:
+    - id: animal-island-ui
+      name: 'dsh-animal-island-ui'
