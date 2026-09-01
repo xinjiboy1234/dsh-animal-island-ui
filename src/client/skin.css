@@ -1,0 +1,253 @@
+/* ============================================================================
+ * dsh-animal-island-ui — Animal Crossing / animal-island-ui themed skin.
+ *
+ * Design language (from guokaigdg/animal-island-ui):
+ *   warm parchment bg  #f8f8f0 / #f7f3df
+ *   earth-brown text   #794f27 (never pure black / cold gray)
+ *   mint-teal primary  #19c8b9
+ *   pill controls      50px radius on buttons/inputs; cards 20px (no box-shadow)
+ *   3D game-button     box-shadow 0 5px 0 0 #bdaea0 (hover lift / active press)
+ *   fonts              Nunito + Noto Sans SC (weight >= 500)
+ *   motion             cubic-bezier(0.4, 0, 0.2, 1), 0.15–0.35s
+ *   focus              #ffcc00 (inputs) / #19c8b9 (buttons) — never blue
+ *
+ * Color/font tokens ride the official --dsw-* token system (applied by the
+ * host's ThemePresenter as inline vars on <body>) — see index.ts. That layer
+ * already landed and is what warms the palette everywhere.
+ *
+ * THIS file is the COMPONENT layer. The shell styles its components with CSS
+ * Modules, emitting class names of the form `{buildHash}_{semanticSuffix}`
+ * (e.g. `uV2eYG_primary`). The hash changes between host rebuilds but the
+ * suffix is fixed, so we target with `[class*="_suffix"]`, scoped under `#root`.
+ *
+ * SCOPE DISCIPLINE (learned the hard way): the shell already lays out and sizes
+ * every widget. We only re-surface it — we must NOT restyle the geometry of
+ * small/dense controls (rows, icon buttons, model entries, switches) or apply
+ * the "card" treatment to input surfaces. Over-broad rule = broken UI.
+ *
+ * VALUES: literal hex constants (not custom --animal-* props, which a late
+ * `:root {}` block may drop at parse time, turning `var(--animal-*)` empty and
+ * making filled controls transparent).
+ *
+ * Injected as a <style> tag and cleaned up on unload.
+ * ========================================================================== */
+
+/* Rounded Latin/Chinese typefaces (fall back to system fonts when offline). */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+/* ---------------------------------------------------------------------------
+ * 0. Page + typography.
+ * ------------------------------------------------------------------------- */
+html,
+body,
+#root {
+  background-color: #f8f8f0;
+}
+#root {
+  font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+#root h1,
+#root h2,
+#root h3,
+#root h4,
+#root h5,
+#root h6,
+#root button,
+#root [role='button'],
+#root [class*='_headlineText'],
+#root [class*='_brandName'] {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1. Standard text inputs / textarea → pill, warm input surface, mint focus.
+ *    (Kept to the big composer + search; small settings fields keep their own
+ *    compact radius so they don't turn into weird tall pills.)
+ * ------------------------------------------------------------------------- */
+#root [data-slot='conversation.composer.bar'] textarea,
+#root [data-slot='conversation.composer.bar'] input,
+#root [data-slot='sidebar.workspaces'] input[type='text'] {
+  border-radius: 50px;
+  background-color: #fffbe7;
+}
+#root input:focus-visible,
+#root textarea:focus-visible,
+#root select:focus-visible,
+#root [contenteditable='true']:focus-visible {
+  outline: 2px solid #ffcc00 !important;
+  outline-offset: 2px !important;
+}
+#root button:focus-visible,
+#root [role='button']:focus-visible {
+  outline: 2px solid #19c8b9 !important;
+  outline-offset: 2px !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Composer card — a clean input surface, NOT a "content card".
+ * ------------------------------------------------------------------------- */
+#root [data-slot='conversation.composer.bar'] [class*='_card'],
+#root [class*='_composerStack'] [class*='_card'] {
+  background-color: #fffbe7;
+  background-image: none;
+  border: 1px solid #c4b89e;
+  border-radius: 22px;
+  box-shadow: 0 4px 12px rgba(61, 52, 40, 0.08);
+}
+#root [data-slot='conversation.composer.bar'] [class*='_card'] [class*='_input'],
+#root [class*='_composerStack'] [class*='_card'] [class*='_input'] {
+  border-radius: 0;
+  caret-color: #19c8b9;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. The send / primary action — mint with the 3D game-button depth.
+ * ------------------------------------------------------------------------- */
+#root [class*='_primary'] {
+  background: #19c8b9 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 0 0 #bdaea0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#root [class*='_primary']:hover:not(:disabled) {
+  background: #3dd4c6 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 #bdaea0;
+}
+#root [class*='_primary']:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #bdaea0;
+}
+/* The + attachment button. */
+#root [class*='_add'] {
+  background: #e6f9f6;
+  color: #794f27;
+  border-radius: 50%;
+  box-shadow: none;
+}
+#root [class*='_add']:hover:not(:disabled) {
+  background: #19c8b9;
+  color: #ffffff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Header / tabs — mint active indicator, pill hover. Never cold blue.
+ * ------------------------------------------------------------------------- */
+#root [class*='_tab'] {
+  border-radius: 50px;
+}
+#root [class*='_tab']::after {
+  border-radius: 50px;
+}
+#root [class*='_crumb'] {
+  border-radius: 50px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Content "cards" (sidebar cards, plugin/agent cards, panels) — warm surface
+ *    and 20px radius, honestly sized. Use :where() so the shell's own per-card
+ *    geometry and nested-card styles still win, and NO dot pattern / box-shadow
+ *    that would make nested cards stack borders ("卡片套卡片").
+ * ------------------------------------------------------------------------- */
+#root :where([class*='_card']) {
+  border: 1px solid #c4b89e;
+  background-color: rgb(247, 243, 223);
+  border-radius: 20px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Sidebar — warm list rows.
+ * ------------------------------------------------------------------------- */
+#root [data-slot='sidebar.workspaces'] [class*='_row'],
+#root [data-slot='sidebar.workspaces'] [class*='_item'] {
+  border-radius: 12px;
+}
+#root [data-slot='sidebar.workspaces'] [class*='_row']:hover,
+#root [data-slot='sidebar.workspaces'] [class*='_item']:hover {
+  background: #e6f9f6;
+}
+#root [data-slot='sidebar.workspaces'] [class*='_active'] {
+  background: #e6f9f6;
+  color: #794f27;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Appearance "theme cube" — selected state must be warm mint, not the
+ *    default white + cold bluish border (the DSH `selected` token).
+ * ------------------------------------------------------------------------- */
+#root [class*='_themeCube'] {
+  border-radius: 50px;
+}
+#root [class*='_themeCube'][class*='_selected'] {
+  background: #e6f9f6 !important;
+  border-color: #19c8b9 !important;
+  color: #0e6e64 !important;
+}
+#root [class*='_themeCube'][class*='_selected']:hover {
+  background: #d3f3ee !important;
+  border-color: #19c8b9 !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Switches / checkboxes (enable / disable) — warm, soft, on-palette.
+ * ------------------------------------------------------------------------- */
+#root [class*='_switchTrack'],
+#root [role='switch'] {
+  background: #f0e8d8;
+}
+#root [role='switch'][aria-checked='true'],
+#root [data-state='checked'] {
+  background: #19c8b9;
+}
+#root input[type='checkbox'] {
+  accent-color: #19c8b9;
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Warm scrollbars / selection / caret.
+ * ------------------------------------------------------------------------- */
+#root,
+#root * {
+  scrollbar-width: thin;
+  scrollbar-color: #c4b89e #f0e8d8;
+}
+#root *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+#root *::-webkit-scrollbar-track {
+  background: #f0e8d8;
+}
+#root *::-webkit-scrollbar-thumb {
+  background: #c4b89e;
+  border-radius: 10px;
+}
+#root *::-webkit-scrollbar-thumb:hover {
+  background: #a89878;
+}
+#root ::selection {
+  background: #e6f9f6;
+  color: #794f27;
+}
+#root [contenteditable='true'],
+#root textarea {
+  caret-color: #19c8b9;
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Messages / markdown on-palette.
+ * ------------------------------------------------------------------------- */
+#root pre,
+#root code {
+  border-radius: 12px;
+}
+#root [class*='_bubble'] {
+  border-radius: 18px;
+}
+#root [class*='_kindTag'],
+#root [class*='_badge'] {
+  border-radius: 999px;
+}
