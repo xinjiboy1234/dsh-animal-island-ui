@@ -1,0 +1,24 @@
+NOTICE
+
+dsh-animal-island-ui skin
+=========================
+
+Code (skin.json, skin.css, patches.css, hooks.mjs, this NOTICE) is provided
+under the MIT License (see git history / LICENSE below for the repository's
+overall terms).
+
+Bundled visual assets & visual style
+------------------------------------
+- assets/leaf-icon.png
+- assets/fonts/nunito-latin-{500,700,900}-normal.woff2
+
+come from the open-source component library "animal-island-ui"
+(https://github.com/guokaigdg/animal-island-ui) and are used under its
+license: Creative Commons Attribution-NonCommercial 4.0 International
+(CC BY-NC 4.0) — https://creativecommons.org/licenses/by-nc/4.0/
+
+Attribution: animal-island-ui by guokaigdg. Non-commercial use only.
+
+The design tokens and CSS in this skin are an independent re-implementation
+of that library's visual language against the official --dsw-* token system of
+the DeepSeek Harness web GUI; no Nintendo assets are bundled.

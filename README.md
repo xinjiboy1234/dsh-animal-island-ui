@@ -1,132 +1,89 @@
-# 🏝 dsh-animal-island-ui
+# 🏝️ dsh-animal-island-ui
 
-An **Animal Crossing / animal-island-ui themed reskin** for the DeepSeek Harness
-web GUI (`dsh web`). It makes the DSH web shell look and feel like the
-[`animal-island-ui`](https://github.com/guokaigdg/animal-island-ui) component
-library — warm parchment backgrounds, earth-brown text, mint-teal primary,
-50px pill controls, 3D "game-button" depth, Nunito + Noto Sans SC, and
-yellow/gold focus rings (never cold blue).
+**动物小岛 (Animal Island)** — an Animal-Crossing-flavoured **skin** for the
+dsh web GUI, rebuilt to the **dsh-web v2 skin-center convention** (the skin
+plugin development spec of the [dsh-web](https://github.com/zhu1090093659/dsh-web)
+project, `dev` branch).
 
-It is a self-contained **DSH client UI plugin** ("theme plugin"). It needs no
-third-party skin runtime and applies automatically once enabled — no reload of
-the plugin, no manual skin picker.
+> 交互遵循 dsh 当前 UI 规范，仅做外观呈现；皮肤仍为 **animal-island** 主题，
+> 图标/字体资源按原库复刻打包。设计源：
+> [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui)
+> (CC BY-NC 4.0)。本皮肤重新实现其视觉语言并内联其字体/图标资产，不依赖该库。
 
-> Design source: <https://github.com/guokaigdg/animal-island-ui> (CC BY-NC 4.0).
-> This plugin re-implements the *visual style* as CSS variables / rules against
-> the DSH shell token system; it does not bundle or depend on the library.
+## What it looks like
 
----
+Warm parchment canvas · earth-brown ink (never pure black/cold gray) ·
+mint-teal `#19c8b9` primary · 50px pill controls · a 3D "game-button" press
+on the primary/send action · Nunito latin type (system CJK fallback, fully
+offline) · yellow focus rings (never cold blue). A dark "forest-night" warm
+brown palette ships alongside.
 
-## How it works
+## Repository layout (pure asset directory)
 
-A DSH client plugin has a **server half** (`lib/index.js`, a Cordis plugin) and
-a **browser half** (`lib/client.js`, a `window.__ModuleLoader__.load({ id,
-factory })` bundle exporting `{ apply, inject }`).
-
-`apply(ctx)` skins the page in two layers, both torn down by one `ctx.effect`:
-
-| Layer | Mechanism | What it covers |
-| --- | --- | --- |
-| **L1 — tokens** | `ctx.theme.overrideTokens('dsh-animal-island-ui', { … })` | `--dsw-alias-*` background/border/brand/label/button/status/markdown/scrollbar tokens, `--dsw-specific-*` surface tokens (sidebar, menu, selector, input-major, bubble) and `--dsw-font-*` typography, mapped to the animal-island-ui palette (86 `{light, dark}` pairs). The host ThemePresenter writes the folded tokens as inline vars on `<body>`, so the palette re-skins anywhere the shell consumes those tokens. |
-| **L2 — components** | an injected `<style>` tag (`data-plugin-css="dsh-animal-island-ui/skin.css"`) | Shapes the shell's **actual widgets**: Nunito/Noto Sans SC `@font-face` (Google Fonts, with system fallback), 50px pill radius on buttons/inputs, 3D game-button depth on the primary/send action, rounded parchment composer card with the dot pattern, mint active-tab indicator, pill tabs/tags/badges, warm scrollbar/selection and yellow/mint focus rings — the parts the token system can't reach. |
-
-- `inject = ['theme']` — the bundle gates on the `theme` service
-  (`@deepseek-ai/dsh-client-ui-theme`), which ships in the base web bundle.
-- If `overrideTokens` is unavailable/throws, it falls back to writing the light
-  palette directly onto `document.body`.
-- Because overrides carry **both** `light` and `dark` values, the skin stays
-  legible when the user switches color schemes (dark mode uses a warm
-  "dark-forest brown" palette).
-
-## Files
+This repository **is** the skin — no `package.json`, no build step, per the
+v2 convention a skin is a pure asset directory consumed by the **skin-center**
+(the single loader).
 
 ```
-dsh-animal-island-ui/
-├── package.json          # dsh.bundle.patch → cordis.patch.yml; dsh.client.{inject,platform}; ./client export
-├── cordis.patch.yml      # inserts the profile-registered plugin row
-├── lib/
-│   ├── index.js          # server half — a minimal Cordis plugin (no-op): makes the bundle row valid
-│   └── client.js         # browser half — the module-loader bundle that applies the skin
-├── src/
-│   ├── client/index.ts   # source for the client bundle (export apply + inject + TOKEN_OVERRIDES)
-│   ├── client/skin.css   # the L2 component stylesheet (inlined into lib/client.js at build)
-│   └── env.d.ts          # ambient `*.css?raw` declaration for rebuilding
-├── tsdown.config.ts      # bundles src/client/index.ts into the module-loader wrapper (lib/client.js)
-├── tsconfig.json
-└── verif/
-    ├── smoke.mjs         # Node smoke test of the browser bundle (no server needed)
-    └── finalize.mjs      # renames tsdown's lib/client.cjs → lib/client.js (run by `npm run build`)
+dsh-animal-island-ui/            # skin dir → installs as <id>="animal-island"
+├── skin.json                    # v2 manifest (skinManifestVersion: 2)
+├── skin.css                     # L1 official --dsw-* token remap + @font-face
+├── patches.css                  # L3 free-selector component patches (scoped
+│                                #   under html[data-dsh-skin="animal-island"])
+├── hooks.mjs                    # optional: leaf favicon (trusted facet)
+├── assets/
+│   ├── leaf-icon.png            # replicated from animal-island-ui
+│   └── fonts/nunito-latin-*.woff2
+├── preview/light.jpg|dark.jpg   # skin-center gallery screenshots
+├── README.md / README.zh.md
+└── NOTICE                       # asset attribution / CC BY-NC
 ```
 
-## Install & enable
+## Install & use (Skin Center)
 
-### Option A — `dsh plugin add` (standard path)
+Installation follows the skin-center user-skin flow — **no plugin add, no
+restart, no `cordis.patch.yml` rewrite**:
 
-```bash
-# from the profile-owner machine:
-dsh plugin --profile web add /path/to/dsh-animal-island-ui
+```sh
+# 1. copy the skin directory into the harness home of the target dsh instance
+cp -R dsh-animal-island-ui "$DSH_HOME/skins/animal-island"
+# (do NOT nest: the skin.json must sit directly under skins/animal-island/)
 ```
 
-This installs the package and reconciles `dsh.profile.bundles`. On Windows with
-the plugin on a *different drive* than the profile, pnpm's absolute-path
-`link:` spec can produce a malformed junction; if so, use Option B.
+Then open the GUI → 设置 → 皮肤中心 (Skin Center). The **动物小岛** card appears
+in the catalog; *Try-on* previews it live, *Apply* persists it (also possible
+to write `$DSH_HOME/skin-center-active.json` `{"active":"animal-island"}` and
+reload). Switches are atomic in-page switches — the current UI's interactions
+are untouched, only the look changes.
 
-### Option B — manual (Windows cross-drive fallback)
+Remove with:
 
-```bash
-# 1. register the bundle (profile package.json -> dsh.profile.bundles): add "dsh-animal-island-ui"
-# 2. copy the package into the profile's node_modules
-cp -R /path/to/dsh-animal-island-ui  "$DSH_HOME/profiles/web/node_modules/dsh-animal-island-ui"
+```sh
+rm -rf "$DSH_HOME/skins/animal-island"
 ```
 
-Either way the bundle is now in the profile plugin roster **enabled by
-default** (the row `{ id: animal-island-ui, name: dsh-animal-island-ui }` has no
-`disabled` flag in the composed config).
+## Notes & requirements
 
-### Enable / disable manually
+- Requires a dsh web GUI that runs the **skin-center** bundle
+  (`@linxin666/dsh-web-all` / `@linxin666/dsh-client-ui-skin-center`,
+  or the dsh-web repo skin center) with **skin manifest v2** support.
+- `skin.css` only remaps official `--dsw-*` tokens (light `:root`, dark
+  `body[data-ds-dark-theme]`); `patches.css` is the disclosed L3 layer.
+- `hooks.mjs` (leaf favicon) executes only for built-in / byte-verified
+  installs; hand-dropped user skins keep the stock favicon (declarative parts
+  still load).
+- Verify (optional, needs the dsh-web repo): run that repo's
+  `scripts/dsh-skin validate` + `pnpm skin-center:check` against this dir, and
+  its market preview simulator with `?skin=animal-island`.
 
-In `$DSH_HOME/profiles/web/cordis.patch.yml`, add a row to disable it:
+## Rebuilding previews
 
-```yaml
-- id: animal-island-ui
-  name: dsh-animal-island-ui
-  disabled: true
-```
-
-### Restart the web app
-
-New bundles are read by the server at boot. Restart the `dsh web` process (or
-re-run `dsh --profile web`) so the profile reloads and the browser picks up the
-fresh client bundle, then hard-refresh `http://127.0.0.1:3080`.
-
-## Verify
-
-- **Composed config** (the plugin row appears, enabled):
-  ```bash
-  dsh --profile web --dump-config | grep -A2 'animal-island-ui'
-  ```
-- **Browser bundle smoke test** (no server — mocks the loader + DOM):
-  ```bash
-  node verif/smoke.mjs
-  ```
-- **In the GUI**: the background goes warm parchment, accent controls turn mint
-  teal, buttons become 50px pills with a 3D "press" shadow, the font becomes
-  Nunito/Noto Sans SC, and focus rings are yellow.
-
-## Customising
-
-- **Palette** — edit `TOKEN_OVERRIDES` in `src/client/index.ts` (light + dark).
-- **Shapes / shadows / fonts / component widgets** — edit `src/client/skin.css`.
-- **Rebuild** `lib/client.js` from source (`tsdown` + `finalize`):
-  ```bash
-  pnpm install    # bring in the dsh client devDeps (or `npm install -D tsdown typescript`)
-  pnpm run build
-  ```
-  The build type-checks, bundles `src/client/index.ts` (inlining `skin.css`) and
-  wraps it in the `window.__ModuleLoader__.load({ id, factory })` loader shape.
+After editing the skin, re-shoot `preview/{light,dark}.jpg` against a running
+dsh web instance with the skin applied (windowed capture, light & dark color
+scheme) and commit them together with the change.
 
 ## License
 
-MIT. This project restyles the DSH web shell using the *visual style* of
-`animal-island-ui` (CC BY-NC 4.0, non-commercial). It contains no Nintendo
-assets or the animal-island-ui library itself.
+Code (skin.json/css/patches/hooks) is MIT unless noted. Bundled visual assets
+& the visual style are from `animal-island-ui` by guokaigdg — **CC BY-NC 4.0**
+(non-commercial). See `NOTICE`.

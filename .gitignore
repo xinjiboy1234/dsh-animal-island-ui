@@ -1,4 +1,12 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+
+# historical build footprint (legacy plugin era) — no longer part of the skin
 node_modules/
 pnpm-lock.yaml
-*.bak
+package-lock.json
 *.tsbuildinfo

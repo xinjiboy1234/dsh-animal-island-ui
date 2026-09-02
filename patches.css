@@ -1,0 +1,379 @@
+/* ============================================================================
+ * animal-island — patches.css (L3, high-sensitivity free-selector layer)
+ *
+ * The L1 token remap in skin.css warms the shell wherever it consumes the
+ * official --dsw-* tokens. This layer carries what tokens cannot reach:
+ * pill geometry, the 3D game-button press, the parchment composer surface,
+ * warm scrollbars/selection and the yellow/mint focus discipline.
+ *
+ * The loader scopes EVERY selector under html[data-dsh-skin="animal-island"].
+ * The official shell styles its widgets with CSS Modules
+ * ({buildHash}_{semanticSuffix}); the hash changes between host rebuilds but
+ * the suffix is stable, so we target `[class*="_suffix"]` inside #root only.
+ *
+ * SCOPE DISCIPLINE (proven against the real shell): never restyle the
+ * geometry of small/dense controls (icon buttons, switches, model rows) and
+ * never apply the "card" treatment to input surfaces. Fills reference the
+ * skin's L1 tokens (var(--dsw-..., fallback)) so light & dark both stay on
+ * palette; only shapes/focus use literals. Interactions of the current UI are
+ * never changed — this layer only re-surfaces it.
+ * ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * 0. Typography — Nunito (latin) + system CJK; rounded & >= 500 weight.
+ * ------------------------------------------------------------------------- */
+#root,
+#root button,
+#root input,
+#root textarea,
+#root select {
+  font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+#root {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+#root h1,
+#root h2,
+#root h3,
+#root h4,
+#root h5,
+#root h6,
+#root [class*='_headlineText'],
+#root [class*='_brandName'],
+#root button,
+#root [role='button'] {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1. Focus discipline — yellow for inputs, mint for buttons. Never cold blue.
+ * ------------------------------------------------------------------------- */
+#root input:focus-visible,
+#root textarea:focus-visible,
+#root select:focus-visible,
+#root [contenteditable='true']:focus-visible {
+  outline: 2px solid #ffcc00 !important;
+  outline-offset: 2px !important;
+}
+#root button:focus-visible,
+#root [role='button']:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary, #19c8b9) !important;
+  outline-offset: 2px !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Big input faces — 50px pill on the composer & workspace search only.
+ *    (Small settings fields keep their own compact radius.)
+ * ------------------------------------------------------------------------- */
+#root [data-slot='conversation.composer.bar'] textarea,
+#root [data-slot='conversation.composer.bar'] input,
+#root [data-slot='sidebar.workspaces'] input[type='text'] {
+  border-radius: 50px;
+}
+
+/* Composer card — a clean parchment input surface, NOT a "content card". */
+#root [data-slot='conversation.composer.bar'] [class*='_card'],
+#root [class*='_composerStack'] [class*='_card'] {
+  background-color: var(--dsw-specific-input-major, #fffbe7);
+  background-image: none;
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e);
+  border-radius: 22px;
+  box-shadow: 0 4px 12px rgba(61, 52, 40, 0.08);
+}
+body[data-ds-dark-theme] #root [data-slot='conversation.composer.bar'] [class*='_card'],
+body[data-ds-dark-theme] #root [class*='_composerStack'] [class*='_card'] {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+#root [data-slot='conversation.composer.bar'] [class*='_card'] [class*='_input'],
+#root [class*='_composerStack'] [class*='_card'] [class*='_input'] {
+  border-radius: 0;
+  caret-color: var(--dsw-alias-state-business-primary, #19c8b9);
+}
+/* The composer input is a "ghost" textarea mirrored by a visible layer. Force
+ * the visible text (and its mirror/backdrop) to warm ink so typed characters
+ * are legible on the parchment surface. */
+#root [data-slot='conversation.composer.bar'] textarea,
+#root [data-slot='conversation.composer.bar'] input,
+#root [class*='_composerStack'] [class*='_input'],
+#root [class*='_composerStack'] [class*='_mirror'],
+#root [data-slot='conversation.composer.bar'] [class*='_mirror'],
+#root [data-slot='conversation.composer.bar'] [class*='_backdrop'],
+#root [contenteditable='true'] {
+  color: var(--dsw-alias-label-primary, #794f27) !important;
+  -webkit-text-fill-color: var(--dsw-alias-label-primary, #794f27) !important;
+}
+#root [data-slot='conversation.composer.bar'] textarea::placeholder,
+#root [data-slot='conversation.composer.bar'] input::placeholder,
+#root [class*='_composerStack'] input::placeholder,
+#root [contenteditable='true']::placeholder {
+  color: var(--dsw-alias-label-tertiary, #9f927d) !important;
+  -webkit-text-fill-color: var(--dsw-alias-label-tertiary, #9f927d) !important;
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Send / primary action — mint fill with the 3D "game button" press.
+ * ------------------------------------------------------------------------- */
+#root [class*='_primary'] {
+  background: var(--dsw-alias-button-info-fill, #19c8b9) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 0 0 #a89878;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, box-shadow 0.2s;
+}
+#root [class*='_primary']:hover:not(:disabled) {
+  background: var(--dsw-alias-button-info-hover, #3dd4c6) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 #a89878;
+}
+#root [class*='_primary']:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #a89878;
+}
+body[data-ds-dark-theme] #root [class*='_primary'] {
+  box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.45);
+}
+/* The "+" attachment button. */
+#root [class*='_add'] {
+  background: var(--dsw-alias-state-business-tertiary, #e6f9f6);
+  color: var(--dsw-alias-label-primary, #794f27);
+  border-radius: 50%;
+  box-shadow: none;
+}
+#root [class*='_add']:hover:not(:disabled) {
+  background: var(--dsw-alias-button-info-fill, #19c8b9);
+  color: #ffffff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Tabs / crumbs — pill shape, mint comes from the state-business token.
+ * ------------------------------------------------------------------------- */
+#root [class*='_tab'] {
+  border-radius: 50px;
+}
+#root [class*='_tab']::after {
+  border-radius: 50px;
+}
+#root [class*='_crumb'] {
+  border-radius: 50px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Content "cards" (sidebar cards, plugin/agent cards, panels). :where()
+ *    zeroes specificity so nested "card in card" settings stay clean; no dot
+ *    pattern, no thick shadows, one fine warm border only.
+ * ------------------------------------------------------------------------- */
+#root :where([class*='_card']) {
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e);
+  background-color: var(--dsw-alias-bg-layer-1, #f7f3df);
+  border-radius: 20px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Sidebar — warm mint list rows (hover / active).
+ * ------------------------------------------------------------------------- */
+#root [data-slot='sidebar.workspaces'] [class*='_row'],
+#root [data-slot='sidebar.workspaces'] [class*='_item'] {
+  border-radius: 12px;
+}
+#root [data-slot='sidebar.workspaces'] [class*='_row']:hover,
+#root [data-slot='sidebar.workspaces'] [class*='_item']:hover {
+  background: var(--dsw-alias-interactive-bg-hover, #e6f9f6);
+}
+#root [data-slot='sidebar.workspaces'] [class*='_active'] {
+  background: var(--dsw-alias-interactive-bg-hover, #e6f9f6);
+  color: var(--dsw-alias-label-primary, #794f27);
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Appearance "theme cube" — the selected state must be warm mint, never
+ *    the stock white + cold bluish border.
+ * ------------------------------------------------------------------------- */
+#root [class*='_themeCube'] {
+  border-radius: 50px;
+}
+#root [class*='_themeCube'][class*='_selected'] {
+  background: var(--dsw-alias-state-business-tertiary, #e6f9f6) !important;
+  border-color: var(--dsw-alias-state-business-primary, #19c8b9) !important;
+  color: #0e6e64 !important;
+}
+#root [class*='_themeCube'][class*='_selected']:hover {
+  background: var(--dsw-alias-interactive-bg-hover, #e6f9f6) !important;
+  border-color: var(--dsw-alias-state-business-primary, #19c8b9) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Switches / checkboxes — warm, on-palette.
+ * ------------------------------------------------------------------------- */
+#root [class*='_switchTrack'],
+#root [role='switch'] {
+  background: var(--dsw-alias-bg-layer-2, #f0e8d8);
+}
+#root [role='switch'][aria-checked='true'],
+#root [data-state='checked'] {
+  background: var(--dsw-alias-state-success-primary, #6fba2c);
+}
+#root input[type='checkbox'] {
+  accent-color: var(--dsw-alias-state-success-primary, #6fba2c);
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Warm scrollbars / selection / caret.
+ * ------------------------------------------------------------------------- */
+#root,
+#root * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--dsw-alias-scrollbar-hover-l2, #c4b89e) var(--dsw-alias-scrollbar-bg-l2, #f0e8d8);
+}
+#root *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+#root *::-webkit-scrollbar-track {
+  background: var(--dsw-alias-scrollbar-bg-l2, #f0e8d8);
+}
+#root *::-webkit-scrollbar-thumb {
+  background: var(--dsw-alias-scrollbar-hover-l2, #c4b89e);
+  border-radius: 10px;
+}
+#root *::-webkit-scrollbar-thumb:hover {
+  background: var(--dsw-alias-border-l2, #a89878);
+}
+#root ::selection {
+  background: var(--dsw-alias-state-business-tertiary, #e6f9f6);
+  color: var(--dsw-alias-label-primary, #794f27);
+}
+#root [contenteditable='true'],
+#root textarea {
+  caret-color: var(--dsw-alias-state-business-primary, #19c8b9);
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Messages / markdown on-palette.
+ * ------------------------------------------------------------------------- */
+#root pre,
+#root code {
+  border-radius: 12px;
+}
+#root [class*='_bubble'] {
+  border-radius: 18px;
+}
+#root [class*='_kindTag'],
+#root [class*='_badge'] {
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Settings dialog — nav cells, dropdown/popover, cards & status pills.
+ * ------------------------------------------------------------------------- */
+
+/* 11a. Settings nav cells — warm mint selected + hover (never periwinkle). */
+#root [class*='_navCell'] {
+  border-radius: 12px !important;
+  color: var(--dsw-alias-label-primary, #794f27);
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s;
+}
+#root [class*='_navCell']:hover:not([class*='_active']) {
+  background-color: var(--dsw-alias-interactive-bg-hover, #e6f9f6) !important;
+}
+#root [class*='_navCell'][class*='_active'] {
+  background-color: var(--dsw-alias-interactive-bg-hover, #e6f9f6) !important;
+  box-shadow: inset 3px 0 0 0 var(--dsw-alias-state-business-primary, #19c8b9);
+  color: #0e6e64;
+}
+#root [class*='_navCell'][class*='_active'] [class*='_navLabel'] {
+  color: #0e6e64;
+}
+
+/* 11b. Dropdown / select triggers — warm pill surface, mint hover + focus. */
+#root [class*='_combobox'],
+#root [class*='_selectTrigger'],
+#root [class*='_select'] {
+  background-color: var(--dsw-specific-selector, #fffbe7) !important;
+  color: var(--dsw-alias-label-primary, #794f27) !important;
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e) !important;
+  border-radius: 50px !important;
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#root [class*='_combobox']:hover,
+#root [class*='_selectTrigger']:hover,
+#root [class*='_select']:hover {
+  background-color: var(--dsw-alias-interactive-bg-hover, #e6f9f6) !important;
+}
+#root [class*='_combobox']:focus-visible,
+#root [class*='_selectTrigger']:focus-visible,
+#root [class*='_select']:focus-visible {
+  outline: 2px solid #ffcc00 !important;
+  outline-offset: 2px !important;
+}
+
+/* 11c. Dropdown popover / options — warm parchment surface + warm hover. */
+#root [class*='_popover'],
+#root [class*='_menu'],
+#root [class*='_options'],
+#root [role='listbox'] {
+  background-color: var(--dsw-specific-menu, #fffbe7) !important;
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 28px rgba(61, 52, 40, 0.16) !important;
+}
+#root [class*='_option'],
+#root [role='option'] {
+  color: var(--dsw-alias-label-primary, #794f27) !important;
+  border-radius: 10px !important;
+  transition: background-color 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#root [class*='_option']:hover,
+#root [role='option']:hover,
+#root [class*='_option'][class*='_hover'],
+#root [class*='_option'][aria-selected='true'],
+#root [class*='_option'][class*='_selected'] {
+  background-color: var(--dsw-alias-interactive-bg-hover, #e6f9f6) !important;
+  color: #0e6e64 !important;
+}
+
+/* 11d. Plugin config / list cards — keep the warm surface & fine edge. */
+#root [class*='_cards'] [class*='_card'],
+#root [class*='_pluginCard'],
+#root [class*='_configCard'] {
+  background-color: var(--dsw-alias-bg-layer-1, #f7f3df) !important;
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e) !important;
+  border-radius: 20px !important;
+  transition: border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#root [class*='_cards'] [class*='_card']:hover,
+#root [class*='_pluginCard']:hover,
+#root [class*='_configCard']:hover {
+  border-color: var(--dsw-alias-border-l2, #a89878) !important;
+}
+/* Plugin name chip — warm mint tint instead of the neutral default. */
+#root [class*='_cards'] [class*='_chip'],
+#root [class*='_cards'] [class*='_tag'],
+#root [class*='_pluginName'] {
+  background-color: var(--dsw-alias-bg-layer-2, #f0e8d8) !important;
+  color: var(--dsw-alias-label-primary, #794f27) !important;
+  border: 1px solid var(--dsw-alias-border-l1, #c4b89e) !important;
+  border-radius: 999px !important;
+}
+/* Status pill — keep success mint; make "disabled" warm neutral, not gray. */
+#root [class*='_status'] {
+  border-radius: 999px !important;
+}
+#root [class*='_status']:not([class*='success']):not([class*='enable']) {
+  background-color: var(--dsw-alias-bg-layer-2, #f0e8d8) !important;
+  color: var(--dsw-alias-label-caption, #8a7b66) !important;
+}
+
+/* 11e. Settings command-bar buttons (保存 / 放弃修改) — warm, unharsh. */
+#root [class*='_submit'],
+#root [class*='_save'],
+#root [class*='_primary'][class*='_submit'] {
+  background-color: var(--dsw-alias-button-contrast-fill, #794f27) !important;
+  color: var(--dsw-alias-label-primary-inverted, #f8f8f0) !important;
+  box-shadow: 0 4px 0 0 #a89878 !important;
+}
+#root [class*='_submit']:hover,
+#root [class*='_save']:hover {
+  background-color: var(--dsw-alias-border-l4, #8a7b66) !important;
+}

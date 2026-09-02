@@ -1,0 +1,308 @@
+/**
+ * animal-island — L1 token remap (+ fonts) for the dsh skin center.
+ *
+ * Authoring contract (skin-center v2):
+ *  - light values go on `:root`, dark values on `body[data-ds-dark-theme]`
+ *    (the official dark-theme attribute lives on document.body). The loader
+ *    force-scopes every selector under html[data-dsh-skin="animal-island"],
+ *    rewrites `:root` to the scope and clones the `--dsw-alias-*` /
+ *    `--dsw-specific-*` declarations onto the scope body so they win over the
+ *    stock root-level theme for everything inside #root.
+ *  - token-first: only remap official --dsw-* semantic tokens; literal colors
+ *    belong to patches.css (L3). No @import, no remote URLs.
+ *
+ * Palette (re-implemented from guokaigdg/animal-island-ui, CC BY-NC 4.0):
+ *  light — parchment #f8f8f0 / earth-brown ink #794f27 / mint #19c8b9;
+ *  dark  — warm "forest night" browns, mint stays the accent.
+ */
+
+/* Rounded Latin typeface (bundled; CJK falls back to local system fonts so the
+   skin stays fully offline and lean). Weights >= 500 per the design language. */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(assets/fonts/nunito-latin-500-normal.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/nunito-latin-700-normal.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/nunito-latin-900-normal.woff2) format('woff2');
+}
+
+/* ---------------------------------------------------------------------------
+ * Page ink & canvas — the parchment canvas and its dark counterpart.
+ * ------------------------------------------------------------------------- */
+:root {
+  color: #794f27;
+  background-color: #f8f8f0;
+}
+
+body[data-ds-dark-theme] {
+  color: #f0e6d2;
+  background-color: #2a231c;
+}
+
+/* ---------------------------------------------------------------------------
+ * L1 — light tokens
+ * ------------------------------------------------------------------------- */
+:root {
+  /* surfaces */
+  --dsw-alias-bg-base: #f8f8f0;
+  --dsw-alias-bg-layer-1: #f7f3df;
+  --dsw-alias-bg-layer-2: #f0e8d8;
+  --dsw-alias-bg-layer-3: #e6dcc4;
+  --dsw-alias-bg-mask-1: rgba(61, 52, 40, 0.35);
+  --dsw-alias-bg-overlay: rgba(61, 52, 40, 0.32);
+  --dsw-alias-bg-skeleton: #f0e8d8;
+  --dsw-alias-bg-module-platform: #e6f9f6;
+  --dsw-alias-bg-multi-select: #fffbe7;
+
+  /* borders */
+  --dsw-alias-border-l1: #c4b89e;
+  --dsw-alias-border-l2: #a89878;
+  --dsw-alias-border-l3: #9f927d;
+  --dsw-alias-border-l4: #8a7b66;
+  --dsw-alias-border-inverted: #f8f8f0;
+  --dsw-alias-border-inverted2: #f8f8f0;
+
+  /* brand + buttons */
+  --dsw-alias-brand-primary: #19c8b9;
+  --dsw-alias-button-primary-fill: #19c8b9;
+  --dsw-alias-button-primary-hover: #3dd4c6;
+  --dsw-alias-button-primary-dimmed: #d9f4f0;
+  --dsw-alias-button-info-fill: #19c8b9;
+  --dsw-alias-button-info-hover: #3dd4c6;
+  --dsw-alias-button-ghost-active-fill: #e6f9f6;
+  --dsw-alias-button-ghost-active-border: #19c8b9;
+  --dsw-alias-button-ghost-active-hover: #d9f4f0;
+  --dsw-alias-button-contrast-fill: #794f27;
+  --dsw-alias-button-elevated-fill: #fffbe7;
+  --dsw-alias-button-floating-fill: #fffbe7;
+  --dsw-alias-button-floating-hover: #e6f9f6;
+  --dsw-alias-button-tool-bar-fill: #f8f8f0;
+  --dsw-alias-button-tool-bar-hover: #e6f9f6;
+  --dsw-alias-button-tool-bar-fill-invisible: transparent;
+
+  /* interactive */
+  --dsw-alias-interactive-bg-hover: #e6f9f6;
+  --dsw-alias-interactive-bg-active: #d9f4f0;
+  --dsw-alias-interactive-bg-hover-accent: #e6f9f6;
+  --dsw-alias-interactive-bg-hover-solid: #f0e8d8;
+  --dsw-alias-interactive-bg-hover-danger: #f7d0d0;
+
+  /* labels — warm brown family, never pure black / cold gray */
+  --dsw-alias-label-primary: #794f27;
+  --dsw-alias-label-primary-foreground: #0a5c54;
+  --dsw-alias-label-primary-inverted: #f8f8f0;
+  --dsw-alias-label-secondary: #725d42;
+  --dsw-alias-label-tertiary: #9f927d;
+  --dsw-alias-label-caption: #8a7b66;
+  --dsw-alias-label-dimmed: #c4b89e;
+  --dsw-alias-label-primary-bluish: #794f27;
+  --dsw-alias-label-primary-dimmed: #a89878;
+
+  /* state */
+  --dsw-alias-state-business-primary: #19c8b9;
+  --dsw-alias-state-business-tertiary: #e6f9f6;
+  --dsw-alias-state-error-primary: #e05a5a;
+  --dsw-alias-state-error-secondary: #f7d0d0;
+  --dsw-alias-state-success-primary: #6fba2c;
+  --dsw-alias-state-success-secondary: #e6f4da;
+  --dsw-alias-state-success-tertiary: #f2f8ea;
+  --dsw-alias-state-warn-primary: #f5c31c;
+  --dsw-alias-state-warn-secondary: #fff3c4;
+  --dsw-alias-state-warn-tertiary: #fffbe0;
+  --dsw-alias-state-warn-label: #dba90e;
+
+  /* tooltip / toast */
+  --dsw-alias-tooltip-bg: #794f27;
+  --dsw-alias-toast-bg: #794f27;
+
+  /* markdown */
+  --dsw-alias-markdown-code-block: #f0e8d8;
+  --dsw-alias-markdown-code-block-banner: #e6f9f6;
+  --dsw-alias-markdown-inline-code: rgba(25, 200, 185, 0.12);
+  --dsw-alias-markdown-tag: #e6f9f6;
+
+  /* scrollbars */
+  --dsw-alias-scrollbar-bg-l1: #f0e8d8;
+  --dsw-alias-scrollbar-hover-l1: #c4b89e;
+  --dsw-alias-scrollbar-bg-l2: #f0e8d8;
+  --dsw-alias-scrollbar-hover-l2: #c4b89e;
+
+  /* specific shell anchors */
+  --dsw-specific-sidebar-fill: #f7f3df;
+  --dsw-specific-sidebar-nav-item-hover: #e6f9f6;
+  --dsw-specific-sidebar-nav-item-active: #e6f9f6;
+  --dsw-specific-sidebar-nav-item-active-accent: #19c8b9;
+  --dsw-specific-input-major: #fffbe7;
+  --dsw-specific-menu: #fffbe7;
+  --dsw-specific-selector: #fffbe7;
+  --dsw-specific-tip: #f0e8d8;
+  --dsw-specific-bubble: #f7f3df;
+  --dsw-specific-bubble-highlight: #e6f9f6;
+
+  /* typography — Nunito carries Latin, system fonts carry CJK */
+  --dsw-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-base-16-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-base-strong-16-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-l-20-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-m-18-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-s-14-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-s-strong-14-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xl-24-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xs-13-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xs-strong-13-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xxs-12-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xxs-strong-12-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xxxs-11-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-xxxs-strong-11-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-base-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-base-italic-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-base-strong-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-base-strong-italic-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-h1-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-h2-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-h3-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-h4-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-small-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-small-strong-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-small-italic-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-small-strong-italic-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-table-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --dsw-font-markdown-table-head-font-family: 'Nunito', 'Noto Sans SC', -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+ * L1 — dark tokens (warm "forest night" browns; the mint accent brightens)
+ * ------------------------------------------------------------------------- */
+body[data-ds-dark-theme] {
+  /* surfaces */
+  --dsw-alias-bg-base: #2a231c;
+  --dsw-alias-bg-layer-1: #332b22;
+  --dsw-alias-bg-layer-2: #3b3227;
+  --dsw-alias-bg-layer-3: #433a2e;
+  --dsw-alias-bg-mask-1: rgba(0, 0, 0, 0.5);
+  --dsw-alias-bg-overlay: rgba(0, 0, 0, 0.55);
+  --dsw-alias-bg-skeleton: #433a2e;
+  --dsw-alias-bg-module-platform: #2e463f;
+  --dsw-alias-bg-multi-select: #3b3227;
+
+  /* borders */
+  --dsw-alias-border-l1: #4a4238;
+  --dsw-alias-border-l2: #5c5244;
+  --dsw-alias-border-l3: #6b5f4e;
+  --dsw-alias-border-l4: #7a6c58;
+  --dsw-alias-border-inverted: #2a231c;
+  --dsw-alias-border-inverted2: #2a231c;
+
+  /* brand + buttons */
+  --dsw-alias-brand-primary: #2fd6c4;
+  --dsw-alias-button-primary-fill: #2fd6c4;
+  --dsw-alias-button-primary-hover: #4de2da;
+  --dsw-alias-button-primary-dimmed: rgba(47, 214, 196, 0.16);
+  --dsw-alias-button-info-fill: #2fd6c4;
+  --dsw-alias-button-info-hover: #4de2da;
+  --dsw-alias-button-ghost-active-fill: rgba(47, 214, 196, 0.12);
+  --dsw-alias-button-ghost-active-border: #2fd6c4;
+  --dsw-alias-button-ghost-active-hover: rgba(47, 214, 196, 0.2);
+  --dsw-alias-button-contrast-fill: #1d1814;
+  --dsw-alias-button-elevated-fill: #3b3227;
+  --dsw-alias-button-floating-fill: #332b22;
+  --dsw-alias-button-floating-hover: #3b3227;
+  --dsw-alias-button-tool-bar-fill: #332b22;
+  --dsw-alias-button-tool-bar-hover: #3b3227;
+  --dsw-alias-button-tool-bar-fill-invisible: transparent;
+
+  /* interactive */
+  --dsw-alias-interactive-bg-hover: rgba(47, 214, 196, 0.1);
+  --dsw-alias-interactive-bg-active: #2e463f;
+  --dsw-alias-interactive-bg-hover-accent: rgba(47, 214, 196, 0.1);
+  --dsw-alias-interactive-bg-hover-solid: #433a2e;
+  --dsw-alias-interactive-bg-hover-danger: rgba(224, 90, 90, 0.18);
+
+  /* labels */
+  --dsw-alias-label-primary: #f0e6d2;
+  --dsw-alias-label-primary-foreground: #0a5c54;
+  --dsw-alias-label-primary-inverted: #f0e6d2;
+  --dsw-alias-label-secondary: #d8cbb0;
+  --dsw-alias-label-tertiary: #a89a82;
+  --dsw-alias-label-caption: #b3a38a;
+  --dsw-alias-label-dimmed: #6b5f4e;
+  --dsw-alias-label-primary-bluish: #f0e6d2;
+  --dsw-alias-label-primary-dimmed: #8a7b66;
+
+  /* state */
+  --dsw-alias-state-business-primary: #2fd6c4;
+  --dsw-alias-state-business-tertiary: rgba(47, 214, 196, 0.12);
+  --dsw-alias-state-error-primary: #e87878;
+  --dsw-alias-state-error-secondary: rgba(224, 90, 90, 0.18);
+  --dsw-alias-state-success-primary: #85cc45;
+  --dsw-alias-state-success-secondary: rgba(111, 186, 44, 0.18);
+  --dsw-alias-state-success-tertiary: rgba(111, 186, 44, 0.12);
+  --dsw-alias-state-warn-primary: #f7d04a;
+  --dsw-alias-state-warn-secondary: rgba(245, 195, 28, 0.18);
+  --dsw-alias-state-warn-tertiary: rgba(245, 195, 28, 0.12);
+  --dsw-alias-state-warn-label: #f7d04a;
+
+  /* tooltip / toast */
+  --dsw-alias-tooltip-bg: #f0e6d2;
+  --dsw-alias-toast-bg: #f0e6d2;
+
+  /* markdown */
+  --dsw-alias-markdown-code-block: #3b3227;
+  --dsw-alias-markdown-code-block-banner: rgba(47, 214, 196, 0.12);
+  --dsw-alias-markdown-inline-code: rgba(47, 214, 196, 0.14);
+  --dsw-alias-markdown-tag: rgba(47, 214, 196, 0.12);
+
+  /* scrollbars */
+  --dsw-alias-scrollbar-bg-l1: #332b22;
+  --dsw-alias-scrollbar-hover-l1: #6b5f4e;
+  --dsw-alias-scrollbar-bg-l2: #332b22;
+  --dsw-alias-scrollbar-hover-l2: #6b5f4e;
+
+  /* specific shell anchors */
+  --dsw-specific-sidebar-fill: #332b22;
+  --dsw-specific-sidebar-nav-item-hover: rgba(47, 214, 196, 0.1);
+  --dsw-specific-sidebar-nav-item-active: rgba(47, 214, 196, 0.16);
+  --dsw-specific-sidebar-nav-item-active-accent: #2fd6c4;
+  --dsw-specific-input-major: #3b3227;
+  --dsw-specific-menu: #3b3227;
+  --dsw-specific-selector: #3b3227;
+  --dsw-specific-tip: #3b3227;
+  --dsw-specific-bubble: #3b3227;
+  --dsw-specific-bubble-highlight: rgba(47, 214, 196, 0.12);
+}
+
+/* ---------------------------------------------------------------------------
+ * L2 — semantic attributes. The skin-center compat adapter stamps
+ * data-dsh-surface / data-dsh-part / data-dsh-plugin on the official shell;
+ * these rules merely warm those surfaces with theme tokens. They degrade to a
+ * no-op on hosts without the adapter (L1 tokens + L3 patches still carry the
+ * look).
+ * ------------------------------------------------------------------------- */
+[data-dsh-surface='sidebar'] {
+  background-color: var(--dsw-specific-sidebar-fill, transparent);
+  color: var(--dsw-alias-label-primary);
+}
+[data-dsh-surface='composer'] {
+  color: var(--dsw-alias-label-primary);
+}
+[data-dsh-surface='settings'],
+[data-dsh-surface='overlay'] {
+  color: var(--dsw-alias-label-primary);
+}
+[data-dsh-part='composer-input'] {
+  caret-color: var(--dsw-alias-state-business-primary, #19c8b9);
+}
