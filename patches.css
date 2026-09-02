@@ -163,11 +163,36 @@ body[data-ds-dark-theme] #root [class*='_primary'] {
  * 5. Content "cards" (sidebar cards, plugin/agent cards, panels). :where()
  *    zeroes specificity so nested "card in card" settings stay clean; no dot
  *    pattern, no thick shadows, one fine warm border only.
+ *
+ *    IMPORTANT (settings "Agent presets"): that component names EVERY part
+ *    with the `_card` prefix (card / cardMain / cardHead / cardName /
+ *    cardDesc / cardId / cardFoot / cards). Styling all of them produces the
+ *    ugly double/triple frame. So the generic rule only matches the *outer*
+ *    card (and genuinely-card widgets like _pluginCard / _configCard), never
+ *    the inner sub-parts or the grid container.
  * ------------------------------------------------------------------------- */
-#root :where([class*='_card']) {
+#root :where([class*='_card']):not([class*='_cardHeader']):not([class*='_cardHead']):not([class*='_cardBody']):not([class*='_cardContent']):not([class*='_cardTitle']):not([class*='_cardName']):not([class*='_cardDesc']):not([class*='_cardDescription']):not([class*='_cardId']):not([class*='_cardMain']):not([class*='_cardFoot']):not([class*='_cardFooter']):not([class*='_cardAction']):not([class*='_cardActions']):not([class*='_cardIcon']):not([class*='_cards']) {
   border: 1px solid var(--dsw-alias-border-l1, #c4b89e);
   background-color: var(--dsw-alias-bg-layer-1, #f7f3df);
   border-radius: 20px;
+}
+
+/* The shell styles the *inner* preset-card parts (main / head / name / desc /
+ * id / foot) with their own 1px frame + radius + surface. On the warm theme
+ * that stacks into beige-on-beige nested boxes (the "Agent 预设" weirdness).
+ * Neutralize those inner boxes so the preset reads as one clean card with
+ * plain text (the outer `_card` keeps the single frame). */
+#root [class*='_cardMain'],
+#root [class*='_cardHead'],
+#root [class*='_cardName'],
+#root [class*='_cardDesc'],
+#root [class*='_cardDescription'],
+#root [class*='_cardId'],
+#root [class*='_cardFoot'],
+#root [class*='_cardFooter'] {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -333,8 +358,12 @@ body[data-ds-dark-theme] #root [class*='_primary'] {
   color: #0e6e64 !important;
 }
 
-/* 11d. Plugin config / list cards — keep the warm surface & fine edge. */
-#root [class*='_cards'] [class*='_card'],
+/* 11d. Plugin config / list cards — keep the warm surface & fine edge.
+ *      NOTE: do NOT use `[class*='_cards'] [class*='_card']` here — the
+ *      settings "Agent presets" grid container is `*_cards` and every one of
+ *      its inner parts is `*_card*`, so that selector would re-frame all of
+ *      them (the double/triple border weirdness). The generic card rule in §5
+ *      already textures real cards; here we only add the hover edge. */
 #root [class*='_pluginCard'],
 #root [class*='_configCard'] {
   background-color: var(--dsw-alias-bg-layer-1, #f7f3df) !important;
@@ -342,7 +371,6 @@ body[data-ds-dark-theme] #root [class*='_primary'] {
   border-radius: 20px !important;
   transition: border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
-#root [class*='_cards'] [class*='_card']:hover,
 #root [class*='_pluginCard']:hover,
 #root [class*='_configCard']:hover {
   border-color: var(--dsw-alias-border-l2, #a89878) !important;

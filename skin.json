@@ -4,7 +4,7 @@
   "id": "animal-island",
   "name": "动物小岛",
   "nameEn": "Animal Island",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": "xinjiboy1234 · dsh-animal-island-ui",
   "tagline": "羊皮纸 · 薄荷 · 药丸控件：暖调动物小岛风皮肤",
   "description": "动物小岛是一款为 dsh Web GUI 打造的暖调换肤：羊皮纸底色、土棕文字、薄荷主色、50px 药丸控件、主按钮 3D「游戏键」深度与 Nunito 字体（黄色焦点，绝不用冷蓝）。视觉语言移植自 guokaigdg/animal-island-ui（CC BY-NC 4.0），仅做外观呈现，不改动当前 UI 的任何交互。",
