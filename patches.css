@@ -124,8 +124,7 @@ body[data-ds-dark-theme] #root [class*='_composerStack'] [class*='_card'] {
 }
 #root [class*='_primary']:hover:not(:disabled) {
   background: var(--dsw-alias-button-info-hover, #3dd4c6) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 0 0 #a89878;
+  box-shadow: 0 4px 0 0 #a89878;
 }
 #root [class*='_primary']:active:not(:disabled) {
   transform: translateY(2px);
@@ -404,4 +403,56 @@ body[data-ds-dark-theme] #root [class*='_primary'] {
 #root [class*='_submit']:hover,
 #root [class*='_save']:hover {
   background-color: var(--dsw-alias-border-l4, #8a7b66) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. Settings → Models provider add buttons: the two actions share the same
+ *     class (`_addButton`) and were landing on a light-mint fill with the
+ *     shell's leftover DASHED border, while hover flipped one to solid mint +
+ *     white text — so the pair looked inconsistent. Unify them into one pill
+ *     family and tame the hover.
+ *     - first button = primary: solid mint fill, white text, subtle depth.
+ *     - second button = secondary: matching pill, transparent fill + mint edge.
+ *     Both keep a soft mint hover (no jarring translate/lift).
+ * ------------------------------------------------------------------------- */
+#root [class*='_addButton'] {
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: var(--dsw-alias-state-business-primary, #19c8b9) !important;
+  border-radius: 24px !important;
+  font-weight: 700 !important;
+  padding: 0 18px !important;
+  height: 44px !important;
+  box-shadow: none !important;
+  transition: background-color 0.16s cubic-bezier(0.4, 0, 0.2, 1), color 0.16s, border-color 0.16s, box-shadow 0.16s !important;
+}
+#root [class*='_addButton']:first-of-type {
+  background: var(--dsw-alias-button-info-fill, #19c8b9) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 3px 0 0 #a89878 !important;
+}
+#root [class*='_addButton']:first-of-type:hover {
+  background: var(--dsw-alias-button-info-hover, #3dd4c6) !important;
+  box-shadow: 0 3px 0 0 #a89878 !important;
+}
+#root [class*='_addButton']:first-of-type:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #a89878 !important;
+}
+#root [class*='_addButton']:last-of-type {
+  background: transparent !important;
+  color: var(--dsw-alias-label-primary, #794f27) !important;
+  border-color: var(--dsw-alias-state-business-primary, #19c8b9) !important;
+}
+#root [class*='_addButton']:last-of-type:hover {
+  background: var(--dsw-alias-state-business-tertiary, #e6f9f6) !important;
+}
+
+/* Settings → Models provider row card: no hover background (keep it flat). */
+#root [class*='_rowCard'] {
+  background: transparent !important;
+}
+#root [class*='_rowCard']:hover {
+  background: transparent !important;
 }
