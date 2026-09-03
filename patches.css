@@ -456,3 +456,16 @@ body[data-ds-dark-theme] #root [class*='_primary'] {
 #root [class*='_rowCard']:hover {
   background: transparent !important;
 }
+
+/* ---------------------------------------------------------------------------
+ * 13. Settings content panel (`VOzbGW_options`, the whole content card) flips
+ *     to pale mint on hover via the shell's interactive hover token — the blue
+ *     cast you see when moving over the content. Keep the panel flat: hover
+ *     keeps the same warm parchment surface.
+ * ------------------------------------------------------------------------- */
+#root [role='dialog'] [class*='_options'] {
+  transition: none !important;
+}
+#root [role='dialog'] [class*='_options']:hover {
+  background-color: var(--dsw-specific-menu, #fffbe7) !important;
+}
